@@ -11,7 +11,7 @@ CORS(app)
 app.secret_key = 'your_secret_key_here'
 
 # Initialize Firebase
-cred = credentials.Certificate("serviceAccountKey.json")
+cred = credentials.Certificate("FIREBASE_CREDENTIAL")
 firebase_admin.initialize_app(cred, {
     'databaseURL': 'https://blog-f8552-default-rtdb.firebaseio.com/'
 })
