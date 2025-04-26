@@ -4,17 +4,33 @@ import random
 import firebase_admin
 from firebase_admin import credentials, db
 import smtplib
-from functools import wraps  # ✅ Import for route protection
+from functools import wraps
+import os
+import base64
+import json  # ✅ Add this import (for parsing json)
+
+from dotenv import load_dotenv  # ✅ For local development
+load_dotenv()
+
 
 app = Flask(__name__)
 CORS(app)
 app.secret_key = 'your_secret_key_here'
 
 # Initialize Firebase
-cred = credentials.Certificate("serviceAccountKey.json")
+# Initialize Firebase using environment variable
+firebase_cred_base64 = os.environ.get("FIREBASE_CREDENTIAL")
+
+if not firebase_cred_base64:
+    raise ValueError("Missing FIREBASE_CREDENTIAL environment variable!")
+
+firebase_cred_json = base64.b64decode(firebase_cred_base64).decode('utf-8')
+cred = credentials.Certificate(json.loads(firebase_cred_json))
+
 firebase_admin.initialize_app(cred, {
-    'databaseURL': 'https://blog-f8552-default-rtdb.firebaseio.com/'
+    'databaseURL': 'https://blog-f8552-default-rtdb.firebaseio.com/'  # ✅ your database URL
 })
+
 
 # Temporary store for OTP and user data
 otp_store = {}
